@@ -2,7 +2,7 @@ A real-time, multi-user collaborative drawing canvas. This project uses Python's
 
 ## Features
 * **Real-Time Collaboration**: Multiple users can draw on the same canvas simultaneously with minimal latency.
-* **Lightweight Backend**: Powered by Python's native `asyncio` and the `websockets` library.
+* **Lightweight Backend**: Powered by Python's native asyncio and the websockets library.
 * **Vanilla Frontend**: Clean and simple HTML5 Canvas and JavaScript implementation. No frameworks required.
 * **Broadcast Architecture**: The server tracks active connections and broadcasts coordinates and stroke data to all connected clients.
 
