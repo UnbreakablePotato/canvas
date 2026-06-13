@@ -1,5 +1,6 @@
 import asyncio
 import websockets
+import json
 
 client_list = set([])
 
@@ -15,11 +16,12 @@ async def handler(connection):
              client_list.remove(connection)
              break
 
-        message_to_send = message
+        message_to_send = json.loads(message)
 
         for client in client_list:
             if client != connection:
                 await client.send(message_to_send)
+                
 
         print(f"Recieved from client: {message}")
         await connection.send("Hello client!")
