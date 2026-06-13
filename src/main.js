@@ -75,9 +75,23 @@ function draw(e) {
 
 }
 
-function receiveDraw(canvas, websocket) {
+function receiveDraw(websocket) {
     websocket.addEventListener("message", ({data}) => {
+        const event = JSON.parse(data);
 
+        switch(event.type) {
+            case "draw":
+                globalctx.lineWidth = event.linewidth;
+                globalctx.lineCap = "round";
+                globalctx.lineTo(event.xpos, event.ypos);
+                globalctx.stroke();
+            case "undo":
+                //undo specific id's last draw
+            case "clear":
+                //clear the canvas
+            default:
+                throw new Error(`Unsupported event type: ${event.type}`)
+        }
     });
 }
 
