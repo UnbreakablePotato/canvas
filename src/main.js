@@ -17,6 +17,8 @@ let lineWidth = 5;
 let lastX;
 let lastY;
 
+const websocket = new WebSocket("ws://localhost:8000")
+
 canvas.addEventListener("mousedown", (event) => {
     painting = true;
     lastX = event.clientX - canvasOffsetx;
@@ -35,6 +37,8 @@ canvas.addEventListener("mousedown", (event) => {
         "ypos": lastY,
         "linewidth": lineWidth
         })
+
+    sendDraw(json_string)
 });
 
 canvas.addEventListener("mousedown", draw)
@@ -67,7 +71,7 @@ function draw(e) {
         "ypos": currY,
         "linewidth": lineWidth
         })
-    
+    sendDraw(json_string)
 
 }
 
@@ -77,8 +81,8 @@ function receiveDraw(canvas, websocket) {
     });
 }
 
-function sendDraw(canvas, websocket) {
-
+function sendDraw(event) {
+    websocket.send(event);
 }
 
 /*
