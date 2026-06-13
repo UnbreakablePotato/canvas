@@ -1,8 +1,6 @@
 import asyncio
 import websockets
-import aioconsole
 import json
-from create_canvas import x1, y1, x2, y2
 
 async def client(event=""):
     async with websockets.connect("ws://localhost:8000") as websocket:
