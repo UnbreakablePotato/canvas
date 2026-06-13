@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>nanoDraw</title>
     <style>
-        /* Basic styling to reset margins and center the canvas */
         body {
             display: flex;
             justify-content: center;
@@ -15,19 +14,43 @@
             background-color: #f4f4f9;
         }
 
-        /* Styling the canvas so it is clearly visible */
-        #myCanvas {
-            border: 2px solid #2c3e50;
-            background-color: #ffffff;
+        /* 1. The Window Frame */
+        #canvasWrapper {
+            position: relative;
+            width: 800px;
+            height: 600px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 2. The Glass Panes */
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            /* Move the border here so they perfectly align */
+            border: 2px solid #2c3e50; 
+        }
+
+        /* The Bottom Glass (Global) */
+        #globalCanvas {
+            z-index: 1;
+            background-color: #ffffff; /* Solid white background goes here */
+        }
+
+        /* The Top Glass (Local) */
+        #myCanvas {
+            z-index: 2; /* Higher number puts it on top */
+            background-color: transparent; /* Explicitly transparent */
+            pointer-events: auto; /* Ensures it captures your mouse clicks */
         }
     </style>
 </head>
 <body>
 
-    <canvas id="myCanvas" width="800" height="600">
-        Your browser does not support the HTML5 canvas tag.
-    </canvas>
+    <div id="canvasWrapper">
+        <canvas id="globalCanvas" width="800" height="600"></canvas>
+        <canvas id="myCanvas" width="800" height="600"></canvas>
+    </div>
 
     <script src="main.js" type="module"></script>
 
