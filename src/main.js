@@ -1,9 +1,15 @@
 
 const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext('2d');
+const rect = canvas.getBoundingClientRect();
 
-const canvasOffsetx = canvas.offsetLeft;
-const canvasOffsetY = canvas.offsetTop
+
+
+const globalCanvas = document.getElementById("globalCanvas");
+const globalctx = globalCanvas.getContext('2d');
+
+const canvasOffsetx = rect.left;
+const canvasOffsetY = rect.top;
 
 let painting = false;
 let lineWidth = 5;
@@ -23,7 +29,12 @@ canvas.addEventListener("mousedown", (event) => {
     ctx.stroke();
     //draw(event);
 
-    const json_string = JSON.stringify({"xpos": lastX, "ypos": lastY});
+    const json_string = JSON.stringify({
+        "type": "draw",
+        "xpos": lastX,
+        "ypos": lastY,
+        "linewidth": lineWidth
+        })
 });
 
 canvas.addEventListener("mousedown", draw)
@@ -44,13 +55,26 @@ function draw(e) {
     ctx.lineWidth = lineWidth;
     ctx.lineCap = "round";
 
+    let currX = e.clientX - canvasOffsetx;
+    let currY = e.clientY - canvasOffsetY;
+
     ctx.lineTo(e.clientX - canvasOffsetx, e.clientY - canvasOffsetY);
     ctx.stroke()
+
+    const json_string = JSON.stringify({
+        "type": "draw",
+        "xpos": currX,
+        "ypos": currY,
+        "linewidth": lineWidth
+        })
+    
 
 }
 
 function receiveDraw(canvas, websocket) {
+    websocket.addEventListener("message", ({data}) => {
 
+    });
 }
 
 function sendDraw(canvas, websocket) {
