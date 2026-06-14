@@ -28,3 +28,19 @@ A real-time, multi-user collaborative drawing canvas. This project uses Python's
 ```console
  foo@bar:~$ pip install websockets
  ```
+
+## How to use it
+* Start by opening your python server
+```console
+ foo@bar:~$ python server.py
+ ```
+
+ or if you are using uv
+
+ ```console
+ foo@bar:~$ uv run server.py
+ ```
+
+ * Open the index.html in your browser or use the live server extension in vscode
+
+ Connect to the same sockets as your friend and start painting!
