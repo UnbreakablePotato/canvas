@@ -11,34 +11,63 @@ const globalctx = globalCanvas.getContext('2d');
 const canvasOffsetx = rect.left;
 const canvasOffsetY = rect.top;
 
+function generateId() {
+    const chars = 'abcdefghijklmnopqrstuvwxyz';
+    const length = 5;
+    let res = '';
+    for (let i = 0; i < length; i++){
+        let rand = Math.floor(Math.random() * length);
+        res += chars.charAt(rand)
+    }
+    let num = Math.random() * (1000-1)+1;;
+
+    let id = res+parseInt(num);
+
+    return id;
+}
+
+class Pen {
+    constructor(xpos, ypos, linewidth, id) {
+        this.xpos = xpos;
+        this.ypos = ypos;
+        this.linewidth = linewidth;
+        this.id = id;
+    }
+}
+
 let painting = false;
 let lineWidth = 5;
 
 let lastX;
 let lastY;
 
+let myid = generateId();
+
+let mypen = new Pen(0,0,5,myid);
+
 const websocket = new WebSocket("ws://localhost:8000")
 
 canvas.addEventListener("mousedown", (event) => {
     painting = true;
-    lastX = event.clientX - canvasOffsetx;
-    lastY = event.clientY - canvasOffsetY;
+    mypen.xpos = event.clientX - canvasOffsetx;
+    mypen.ypos = event.clientY - canvasOffsetY;
 
-    ctx.lineWidth = lineWidth;
+    ctx.lineWidth = mypen.linewidth;
     ctx.lineCap = "round";
 
-    ctx.lineTo(lastX,lastY);
+    ctx.lineTo(mypen.xpos,mypen.ypos);
     ctx.stroke();
     //draw(event);
 
     const json_string = JSON.stringify({
         "type": "draw",
-        "xpos": lastX,
-        "ypos": lastY,
-        "linewidth": lineWidth
+        "id": mypen.id,
+        "xpos": mypen.xpos,
+        "ypos": mypen.ypos,
+        "linewidth": mypen.linewidth
         })
 
-    sendDraw(json_string)
+    //sendDraw(json_string);
 });
 
 canvas.addEventListener("mousedown", draw)
@@ -56,20 +85,21 @@ function draw(e) {
         return;
     }
 
-    ctx.lineWidth = lineWidth;
+    ctx.lineWidth = mypen.linewidth;
     ctx.lineCap = "round";
 
-    let currX = e.clientX - canvasOffsetx;
-    let currY = e.clientY - canvasOffsetY;
+    mypen.xpos = e.clientX - canvasOffsetx;
+    mypen.ypos = e.clientY - canvasOffsetY;
 
-    ctx.lineTo(e.clientX - canvasOffsetx, e.clientY - canvasOffsetY);
+    ctx.lineTo(mypen.xpos, mypen.ypos);
     ctx.stroke()
 
     const json_string = JSON.stringify({
         "type": "draw",
-        "xpos": currX,
-        "ypos": currY,
-        "linewidth": lineWidth
+        "id": mypen.id,
+        "xpos": mypen.xpos,
+        "ypos": mypen.ypos,
+        "linewidth": mypen.linewidth
         })
     sendDraw(json_string)
 
@@ -85,10 +115,13 @@ function receiveDraw(websocket) {
                 globalctx.lineCap = "round";
                 globalctx.lineTo(event.xpos, event.ypos);
                 globalctx.stroke();
+                break;
             case "undo":
                 //undo specific id's last draw
+                break;
             case "clear":
                 //clear the canvas
+                break;
             default:
                 throw new Error(`Unsupported event type: ${event.type}`)
         }
@@ -98,6 +131,8 @@ function receiveDraw(websocket) {
 function sendDraw(event) {
     websocket.send(event);
 }
+
+receiveDraw(websocket)
 
 /*
 window.addEventListener("DOMContentLoaded", () => {
