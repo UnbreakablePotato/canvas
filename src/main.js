@@ -111,6 +111,22 @@ canvas.addEventListener("keydown", (event) => {
     }
 });
 
+window.addEventListener("keydown", (event) => {
+    if (event.ctrlKey && event.code === "KeyA") {
+        event.preventDefault();
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+
+        const json_string = JSON.stringify({
+        "type": "clear",
+        "id": mypen.id,
+        "xpos": mypen.xpos,
+        "ypos": mypen.ypos,
+        "linewidth": mypen.linewidth
+        })
+        sendEvent(json_string);
+    }
+});
+
 function receiveDraw(websocket) {
     websocket.addEventListener("message", ({data}) => {
         const event = JSON.parse(data);
