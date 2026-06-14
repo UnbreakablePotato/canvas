@@ -56,9 +56,9 @@ canvas.addEventListener("mousedown", (event) => {
     ctx.lineWidth = mypen.linewidth;
     ctx.lineCap = "round";
 
+    ctx.moveTo(mypen.xpos,mypen.ypos);
     ctx.lineTo(mypen.xpos,mypen.ypos);
     ctx.stroke();
-    //draw(event);
 
     const json_string = JSON.stringify({
         "type": "start",
@@ -70,8 +70,6 @@ canvas.addEventListener("mousedown", (event) => {
 
     sendDraw(json_string);
 });
-
-//canvas.addEventListener("mousedown", draw)
 
 canvas.addEventListener("mouseup", (event) => {
     mypen.painting = false;
