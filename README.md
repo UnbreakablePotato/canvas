@@ -15,7 +15,7 @@ A real-time, multi-user collaborative drawing canvas. This project uses Python's
 * **Clone the repository**
  In your termninal: 
  ```console
- foo@bar:~$ git clone [https://github.com/UnbreakablePotato/canvas.git](https://github.com/UnbreakablePotato/canvas.git)
+ foo@bar:~$ git clone https://github.com/UnbreakablePotato/canvas.git
  foo@bar:~$ cd canvas
  ```
 
