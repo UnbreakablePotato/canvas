@@ -44,3 +44,7 @@ A real-time, multi-user collaborative drawing canvas. This project uses Python's
  * Open the index.html in your browser or use the live server extension in vscode
 
  * Connect to the same sockets as your friend and start painting!
+
+ * Clear your local canvas with Ctrl-A
+
+ * Undo your last penstroke with Ctrl-Z
