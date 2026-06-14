@@ -19,7 +19,7 @@ function generateId() {
         let rand = Math.floor(Math.random() * length);
         res += chars.charAt(rand)
     }
-    let num = Math.random() * (1000-1)+1;;
+    let num = Math.random() * (1000-1)+1;
 
     let id = res+parseInt(num);
 
@@ -53,6 +53,10 @@ canvas.addEventListener("mousedown", (event) => {
     mypen.painting = true;
     mypen.xpos = event.clientX - canvasOffsetx;
     mypen.ypos = event.clientY - canvasOffsetY;
+
+    const coordinate = [mypen.xpos, mypen.ypos];
+
+    mypen.strokes.push(coordinate);
 
     ctx.lineWidth = mypen.linewidth;
     ctx.lineCap = "round";
@@ -91,6 +95,10 @@ function draw(e) {
     mypen.xpos = e.clientX - canvasOffsetx;
     mypen.ypos = e.clientY - canvasOffsetY;
 
+    let coordinate = [mypen.xpos, mypen.ypos];
+
+    mypen.strokes.push(coordinate);
+
     ctx.lineTo(mypen.xpos, mypen.ypos);
     ctx.stroke()
 
@@ -105,9 +113,25 @@ function draw(e) {
 
 }
 
-canvas.addEventListener("keydown", (event) => {
+window.addEventListener("keydown", (event) => {
     if (event.ctrlKey && event.code === "KeyZ") {
+        if ( mypen.strokes.length === 0) {
+            return;
+        }
         // pop last stroke
+        event.preventDefault();
+        let coordinate = mypen.strokes.pop();
+        ctx.clearRect(0, 0,canvas.width,canvas.height);
+
+        const json_string = JSON.stringify({
+        "type": "undo",
+        "id": mypen.id,
+        "xpos": coordinate[0],
+        "ypos": coordinate[1],
+        "linewidth": mypen.linewidth
+        })
+        sendEvent(json_string);
+        
     }
 });
 
