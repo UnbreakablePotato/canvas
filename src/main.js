@@ -111,6 +111,7 @@ function receiveDraw(websocket) {
 
         switch(event.type) {
             case "draw":
+                //globalctx.beginPath();
                 globalctx.lineWidth = event.linewidth;
                 globalctx.lineCap = "round";
                 globalctx.lineTo(event.xpos, event.ypos);
