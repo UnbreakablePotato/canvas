@@ -16,13 +16,13 @@ async def handler(connection):
              client_list.remove(connection)
              break
 
-        message_to_send = json.loads(message)
+        message_string = json.loads(message)
 
-        mes = json.dumps(message_to_send)
+        message_to_send = json.dumps(message_string)
 
         for client in client_list:
             if client != connection:
-                await client.send(mes)
+                await client.send(message_to_send)
                 
 
         print(f"Recieved from client: {message}")
