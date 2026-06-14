@@ -10,3 +10,21 @@ A real-time, multi-user collaborative drawing canvas. This project uses Python's
 
 * **Python 3.10+**
 * A modern web browser (Chrome, Firefox, Safari, Edge)
+
+## Installation
+* **Clone the repository**
+ In your termninal: 
+ ```console
+ foo@bar:~$ git clone [https://github.com/UnbreakablePotato/canvas.git](https://github.com/UnbreakablePotato/canvas.git)
+ foo@bar:~$ cd canvas
+ ```
+
+* **Set up your virtual environment**
+```console
+ foo@bar:~$ python -m venv venv
+```
+
+* **Install the websockets library**
+```console
+ foo@bar:~$ pip install websockets
+ ```
