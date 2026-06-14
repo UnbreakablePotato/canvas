@@ -27,11 +27,12 @@ function generateId() {
 }
 
 class Pen {
-    constructor(xpos, ypos, linewidth, id) {
+    constructor(xpos, ypos, linewidth, id, painting) {
         this.xpos = xpos;
         this.ypos = ypos;
         this.linewidth = linewidth;
         this.id = id;
+        this.painting = painting;
     }
 }
 
@@ -43,12 +44,12 @@ let lastY;
 
 let myid = generateId();
 
-let mypen = new Pen(0,0,5,myid);
+let mypen = new Pen(0,0,5,myid, false);
 
 const websocket = new WebSocket("ws://localhost:8000")
 
 canvas.addEventListener("mousedown", (event) => {
-    painting = true;
+    mypen.painting = true;
     mypen.xpos = event.clientX - canvasOffsetx;
     mypen.ypos = event.clientY - canvasOffsetY;
 
@@ -60,20 +61,20 @@ canvas.addEventListener("mousedown", (event) => {
     //draw(event);
 
     const json_string = JSON.stringify({
-        "type": "draw",
+        "type": "start",
         "id": mypen.id,
         "xpos": mypen.xpos,
         "ypos": mypen.ypos,
         "linewidth": mypen.linewidth
         })
 
-    //sendDraw(json_string);
+    sendDraw(json_string);
 });
 
-canvas.addEventListener("mousedown", draw)
+//canvas.addEventListener("mousedown", draw)
 
 canvas.addEventListener("mouseup", (event) => {
-    painting = false;
+    mypen.painting = false;
     ctx.stroke();
     ctx.beginPath();
 });
@@ -81,7 +82,7 @@ canvas.addEventListener("mouseup", (event) => {
 canvas.addEventListener("mousemove", draw);
 
 function draw(e) {
-    if(!painting) {
+    if(!mypen.painting) {
         return;
     }
 
@@ -110,6 +111,14 @@ function receiveDraw(websocket) {
         const event = JSON.parse(data);
 
         switch(event.type) {
+            case "start":
+                globalctx.lineWidth = event.linewidth;
+                globalctx.lineCap = "round";
+                globalctx.moveTo(event.xpos, event.ypos);
+                globalctx.lineTo(event.xpos, event.ypos);
+                globalctx.stroke();
+                globalctx.beginPath();
+                break;
             case "draw":
                 //globalctx.beginPath();
                 globalctx.lineWidth = event.linewidth;
