@@ -27,12 +27,13 @@ function generateId() {
 }
 
 class Pen {
-    constructor(xpos, ypos, linewidth, id, painting) {
+    constructor(xpos, ypos, linewidth, id, painting, strokes = []) {
         this.xpos = xpos;
         this.ypos = ypos;
         this.linewidth = linewidth;
         this.id = id;
         this.painting = painting;
+        this.strokes = strokes;
     }
 }
 
@@ -68,7 +69,7 @@ canvas.addEventListener("mousedown", (event) => {
         "linewidth": mypen.linewidth
         })
 
-    sendDraw(json_string);
+    sendEvent(json_string);
 });
 
 canvas.addEventListener("mouseup", (event) => {
@@ -100,9 +101,15 @@ function draw(e) {
         "ypos": mypen.ypos,
         "linewidth": mypen.linewidth
         })
-    sendDraw(json_string)
+    sendEvent(json_string)
 
 }
+
+canvas.addEventListener("keydown", (event) => {
+    if (event.ctrlKey && event.code === "KeyZ") {
+        // pop last stroke
+    }
+});
 
 function receiveDraw(websocket) {
     websocket.addEventListener("message", ({data}) => {
@@ -139,7 +146,7 @@ function receiveDraw(websocket) {
     });
 }
 
-function sendDraw(event) {
+function sendEvent(event) {
     websocket.send(event);
 }
 
