@@ -132,6 +132,9 @@ function receiveDraw(websocket) {
             case "clear":
                 //clear the canvas
                 break;
+            case "join":
+                // draw all previous lines
+                break;
             default:
                 throw new Error(`Unsupported event type: ${event.type}`)
         }
