@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 import json
+import os
 
 client_list = set([])
 
@@ -29,8 +30,9 @@ async def handler(connection):
         await connection.send("Hello client!")
 
 async def main():
-    async with websockets.serve(handler, "localhost", 8000):
-        print("Server running at ws://localhost:8000")
+    port = int(os.environ.get("PORT", 8000))
+    async with websockets.serve(handler, "0.0.0.0", port):
+        print(f"Server running at ws://0.0.0.0:{port}")
         await asyncio.Future()
 
 asyncio.run(main())
