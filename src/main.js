@@ -3,6 +3,8 @@ const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext('2d');
 const rect = canvas.getBoundingClientRect();
 
+let trueHeight = window.height;
+let trueWidth = window.width;
 
 
 const globalCanvas = document.getElementById("globalCanvas");
@@ -27,7 +29,8 @@ function generateId() {
 }
 
 class Pen {
-    constructor(xpos, ypos, linewidth, id, painting, strokes = []) {
+    constructor(type,xpos, ypos, linewidth, id, painting, strokes = []) {
+        this.type = type;
         this.xpos = xpos;
         this.ypos = ypos;
         this.linewidth = linewidth;
@@ -37,15 +40,10 @@ class Pen {
     }
 }
 
-let painting = false;
-let lineWidth = 5;
-
-let lastX;
-let lastY;
 
 let myid = generateId();
 
-let mypen = new Pen(0,0,5,myid, false);
+let mypen = new Pen("",0,0,5,myid, false);
 
 const websocket = new WebSocket("ws://localhost:8000")
 
@@ -66,7 +64,7 @@ canvas.addEventListener("mousedown", (event) => {
     ctx.stroke();
 
     const json_string = JSON.stringify({
-        "type": "start",
+        "type": "startDraw",
         "id": mypen.id,
         "xpos": mypen.xpos,
         "ypos": mypen.ypos,
@@ -80,6 +78,15 @@ canvas.addEventListener("mouseup", (event) => {
     mypen.painting = false;
     ctx.stroke();
     ctx.beginPath();
+    mypen.type = "endDraw";
+    const json_string = JSON.stringify({
+        "type": "endDraw",
+        "id": mypen.id,
+        "xpos": mypen.xpos,
+        "ypos": mypen.ypos,
+        "linewidth": mypen.linewidth
+        })
+    sendEvent(json_string);
 });
 
 canvas.addEventListener("mousemove", draw);
@@ -95,7 +102,7 @@ function draw(e) {
     mypen.xpos = e.clientX - canvasOffsetx;
     mypen.ypos = e.clientY - canvasOffsetY;
 
-    let coordinate = [mypen.xpos, mypen.ypos];
+    let coordinate = ["draw",mypen.xpos, mypen.ypos];
 
     mypen.strokes.push(coordinate);
 
@@ -109,7 +116,7 @@ function draw(e) {
         "ypos": mypen.ypos,
         "linewidth": mypen.linewidth
         })
-    sendEvent(json_string)
+    //sendEvent(json_string);
 
 }
 
@@ -131,6 +138,7 @@ window.addEventListener("keydown", (event) => {
         "linewidth": mypen.linewidth
         })
         sendEvent(json_string);
+        
         
     }
 });
@@ -156,7 +164,7 @@ function receiveDraw(websocket) {
         const event = JSON.parse(data);
 
         switch(event.type) {
-            case "start":
+            case "startDraw":
                 globalctx.lineWidth = event.linewidth;
                 globalctx.lineCap = "round";
                 globalctx.moveTo(event.xpos, event.ypos);
@@ -164,7 +172,7 @@ function receiveDraw(websocket) {
                 globalctx.stroke();
                 globalctx.beginPath();
                 break;
-            case "draw":
+            case "endDraw":
                 //globalctx.beginPath();
                 globalctx.lineWidth = event.linewidth;
                 globalctx.lineCap = "round";
