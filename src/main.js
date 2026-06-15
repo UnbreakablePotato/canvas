@@ -116,7 +116,7 @@ function draw(e) {
         "ypos": mypen.ypos,
         "linewidth": mypen.linewidth
         })
-    //sendEvent(json_string);
+    sendEvent(json_string);
 
 }
 
@@ -174,6 +174,12 @@ function receiveDraw(websocket) {
                 break;
             case "endDraw":
                 //globalctx.beginPath();
+                globalctx.lineWidth = event.linewidth;
+                globalctx.lineCap = "round";
+                globalctx.lineTo(event.xpos, event.ypos);
+                globalctx.stroke();
+                break;
+            case "draw":
                 globalctx.lineWidth = event.linewidth;
                 globalctx.lineCap = "round";
                 globalctx.lineTo(event.xpos, event.ypos);
