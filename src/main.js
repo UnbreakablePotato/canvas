@@ -3,8 +3,8 @@ const canvas = document.getElementById("myCanvas");
 const ctx = canvas.getContext('2d');
 const rect = canvas.getBoundingClientRect();
 
-let trueHeight = window.height;
-let trueWidth = window.width;
+//let trueHeight = window.height;
+//let trueWidth = window.width;
 
 
 const globalCanvas = document.getElementById("globalCanvas");
